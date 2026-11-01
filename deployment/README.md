@@ -328,3 +328,87 @@ deployment/
 复现：`python .\deployment\_drama3_roundtrip.py`
 （工作流 `drama3_roundtrip_api.json`；音频需为 WAV——本机 ComfyUI 的 PyAV 不解码 FLAC，
 `LoadAudio` 会报 `No audio frames decoded`，用 `soundfile` 转 PCM_16 WAV 即可。）
+
+---
+
+## 13. 工作流与对齐器模型的两个真问题（2026-11-01 晚）
+
+### 13.1 上游 19 张工作流在 v0.3.2 下本身就校验不过
+
+**根因**：上游 `workflows/` 里的 `widgets_values` 是按**更早的节点控件布局**写的。
+v0.3.2 里 `T8DramaGenerate` 少了第 6 个控件、末尾多了 `replace_delivery_tags`，
+于是**从第 6 个槽位起每个值都错位一格**。
+
+上游 `workflows/workflow_basic.json` 的原始值：
+
+```
+["speech", "你好…", "", 300, 42, "fixed", 0.7, 0.7, 30, 180, "", 0, "custom"]
+                    ^^^^^^ 这个控件在 v0.3.2 里已经不存在（当时是 exact-seed 组合框）
+```
+
+按 v0.3.2 的 schema 直接读，`temperature` 会拿到字符串 `"fixed"`，
+`top_k` 拿到 `0.7`（应为整数），`sampling_preset` 拿到整数 `0`——
+ComfyUI 自己会拒绝：
+
+```
+invalid_input_type: Failed to convert an input value to a FLOAT value
+  temperature, fixed, could not convert string to float: 'fixed'
+value_not_in_list: sampling_preset: 0 not in ['custom', 'stable', 'expressive']
+```
+
+**上游 19 张工作流全部带这个问题**（同一 commit、同一个失效控件）。
+
+**修法**：不用「均匀位移」——因为是**中间删、末尾加**，位移模型本身就不成立。
+`deployment/qa/rebuild_workflows.py` 用**序列比对（DP，允许两侧跳位）**把旧值对齐回新槽位：
+
+- COMBO 槽位只有在值**确实属于它的选项**时才算匹配（权重 4.0）
+- 基本类型槽位只在**类型精确匹配**时才算匹配（权重 2.0）
+- 跳过的槽位回落到 schema 默认值（永远是合法值）
+- 跳过的旧值会被**报告出来**，不会静默丢失
+
+重建结果：`T8DramaGenerate` 13/13 槽位全部命中，唯一被丢弃的就是那个失效的 `"fixed"`；
+`temperature` 拿回 `0.7`、`top_k` 拿回 `30`、`max_frames` 拿回 `180`，
+正文 `text` 完整保留。19 张工作流共 **504 个控件值全部通过 schema 校验（0 问题）**。
+
+### 13.2 `workflow_asr.json` 的 `asr_model` 指向了对齐器权重
+
+`asr_model` 下拉里存的是 `qwen-aligner\model.safetensors`（**对齐器**权重），
+而不是 ASR 模型。它当时能跑，只是因为 `model_path` 非空、优先级更高把它盖住了；
+一旦用户清空 `model_path`，转写就会去加载对齐器。已改回 `qwen3-asr-06b.safetensors`。
+
+> `T8DramaTranscribe.execute` 的解析顺序（`drama3_t8/nodes.py:347-370`）：
+> `model_path` 非空 → 用它；否则才用 `asr_model` 下拉。两者只生效一个。
+
+### 13.3 `qwen-aligner/model.safetensors` 是 100% 全零的占位文件
+
+`workflow_align` 报 `SafetensorError: invalid JSON in header`。
+查证：该文件**大小正确（1,835,544,544 B，与上游清单一致）但每个字节都是 0**——
+`hf_hub_download(local_dir=...)` 把字节留在了 `local_dir/.cache/` 里，
+清理 `.cache` 时最终文件只剩同尺寸的空壳。
+
+> 上游清单给 `qwen-aligner/model.safetensors` 只有**字节数、没有 sha256**，
+> 所以第 10 节的 sha256 校验没有覆盖到它——这是漏检点。
+> 权威哈希来自 HF 的 LFS 元数据：`lfs.oid = 47831d0e82f96b20e9034dba01a075ee06436654719f6a68289e49f1b65ce0e7`。
+> （注意第 10 节坑 ② 说的是 tree API 的 `lfs.sha256` 字段；这里取的是 `lfs.oid`，
+> 对 LFS 文件它**就是**内容哈希——已用实际文件逐字节复核。）
+
+**修法**：用 `deployment/_parallel_download.py` 重新分片拉取（它对「整块全零」的判定是
+「未下载」，会重取，不会把零块当已完成），落盘后按上面的 sha256 逐字节校验。
+同时补齐清单里列了但从未落盘的两个小文件：
+`qwen-aligner/download-revision.json`（源 `Qwen/Qwen3-ForcedAligner-0.6B` rev `c7cbfc20…`）
+与 `qwen-aligner/README.md`。
+
+### 13.4 怎么复验
+
+```sh
+# 静态：19 张工作流 × 504 个控件，对当前 schema 全量校验
+python deployment/qa/check_workflows.py
+
+# 动态：把交付的工作流文件当 API 提示词真跑一遍（UI→API 按 schema 命名映射）
+python deployment/qa/run_workflow.py workflow_basic.json
+python deployment/qa/run_workflow.py workflow_asr.json overrides.json
+```
+
+`run_workflow.py` 用插件自己的 schema 做控件顺序映射，把 UI 工作流转成 API 提示词，
+**跑的就是用户加载的那张工作流文件本身**，不是另搭一个相似的提示词。
+
