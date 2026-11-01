@@ -1,0 +1,28 @@
+{
+  "campplus": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\user\\drama3_t8\\native-host\\models\\campplus-zh-en.onnx",
+  "audio": {
+    "sample_rate": 44100,
+    "samples": 229376,
+    "duration_s": 5.2,
+    "peak": 0.140411376953125
+  },
+  "plugin_metadata": {
+    "framework": "3d-speaker",
+    "language": "Chinese-English",
+    "url": "https://www.modelscope.cn/models/iic/speech_campplus_sv_zh_en_16k-common_advanced/summary",
+    "comment": "This model is from iic/speech_campplus_sv_zh_en_16k-common_advanced",
+    "feature_normalize_type": "global-mean",
+    "sample_rate": "16000",
+    "output_dim": "192",
+    "normalize_samples": "1"
+  },
+  "plugin_accepted": true,
+  "plugin_sha256_of_file": "aa3cfc16963a10586a9393f5035d6d6b57e98d358b347f80c2a30bf4f00ceba2",
+  "embedding": {
+    "dim": 192,
+    "norm": 1.0,
+    "finite": true,
+    "max_abs": 0.1938154399394989
+  },
+  "verdict": "pass"
+}

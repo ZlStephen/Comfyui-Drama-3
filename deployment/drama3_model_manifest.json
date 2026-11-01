@@ -1,0 +1,181 @@
+{
+  "source": "t8star/Drama-3-Comfy model-manifest.json (upstream authority)",
+  "verified_at": "2026-11-01 09:52:19",
+  "totals": {
+    "ok": 11,
+    "missing": 4,
+    "bad": 4
+  },
+  "files": [
+    {
+      "repo_path": "drama3-t8-fp8.safetensors",
+      "local_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+      "expected_bytes": 38578460824,
+      "expected_sha256": "013fe091c5d6bc7cf666332f61edbd4d21feeefcc76ed22fb7ddfb718b276442",
+      "actual_bytes": 38578460824,
+      "actual_sha256": "4e7f0ea7196ef0386f639e2cf48a381dbf7695c735d383ff1341fb8015529505",
+      "hash_seconds": 29.6,
+      "status": "sha256-mismatch"
+    },
+    {
+      "repo_path": "drama3-text-head.safetensors",
+      "local_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-text-head.safetensors",
+      "expected_bytes": 1033371816,
+      "expected_sha256": "b92f64bdc9db6f21ac478f078c3cd0d8ddfc890c00f4dfe461efa9fd4cda5042",
+      "actual_bytes": 1033371816,
+      "actual_sha256": "b92f64bdc9db6f21ac478f078c3cd0d8ddfc890c00f4dfe461efa9fd4cda5042",
+      "hash_seconds": 0.8,
+      "status": "ok"
+    },
+    {
+      "repo_path": "drama3-line-head.safetensors",
+      "local_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-line-head.safetensors",
+      "expected_bytes": 8480,
+      "expected_sha256": "59ca2d328d79c89f30fd2ab1502205e8c52279d1b4679732adabdc8489320321",
+      "actual_bytes": 8480,
+      "actual_sha256": "59ca2d328d79c89f30fd2ab1502205e8c52279d1b4679732adabdc8489320321",
+      "hash_seconds": 0.0,
+      "status": "ok"
+    },
+    {
+      "repo_path": "qwen3-asr-06b.safetensors",
+      "local_path": "J:\\ComfyUI-Shared\\models\\asr\\qwen3-asr-06b.safetensors",
+      "expected_bytes": 1564928184,
+      "expected_sha256": "eb350ce7510a538eb136d8320db470a0761713c47de6e12b0fca090d4fc15ecf",
+      "actual_bytes": 1564928184,
+      "actual_sha256": "620149df7011cf3eafcd1131790d350f1d04ff8c057ac51f9edd632c3341be65",
+      "hash_seconds": 1.2,
+      "status": "sha256-mismatch"
+    },
+    {
+      "repo_path": "qwen3-asr-06b.safetensors",
+      "local_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\qwen3-asr-06b.safetensors",
+      "expected_bytes": 1564928184,
+      "expected_sha256": "eb350ce7510a538eb136d8320db470a0761713c47de6e12b0fca090d4fc15ecf",
+      "actual_bytes": 1564928184,
+      "actual_sha256": "620149df7011cf3eafcd1131790d350f1d04ff8c057ac51f9edd632c3341be65",
+      "hash_seconds": 1.2,
+      "status": "sha256-mismatch"
+    },
+    {
+      "repo_path": "drama3-codec.safetensors",
+      "local_path": "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
+      "expected_bytes": 1565647484,
+      "expected_sha256": "90e21f45f8a12e0234c2453b7ad0ff78945e73fad68b26cc5cd1a796e526c6ec",
+      "actual_bytes": 1565647484,
+      "actual_sha256": "90e21f45f8a12e0234c2453b7ad0ff78945e73fad68b26cc5cd1a796e526c6ec",
+      "hash_seconds": 1.2,
+      "status": "ok"
+    },
+    {
+      "repo_path": "qwen-aligner/config.json",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\config.json",
+      "expected_bytes": 5982,
+      "expected_sha256": null,
+      "actual_bytes": 5982,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/chat_template.json",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\chat_template.json",
+      "expected_bytes": 1161,
+      "expected_sha256": null,
+      "actual_bytes": 1161,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/generation_config.json",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\generation_config.json",
+      "expected_bytes": 115,
+      "expected_sha256": null,
+      "actual_bytes": 115,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/merges.txt",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\merges.txt",
+      "expected_bytes": 1671853,
+      "expected_sha256": null,
+      "actual_bytes": 1671853,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/model.safetensors",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\model.safetensors",
+      "expected_bytes": 1835544544,
+      "expected_sha256": null,
+      "actual_bytes": 1835544544,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/preprocessor_config.json",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\preprocessor_config.json",
+      "expected_bytes": 330,
+      "expected_sha256": null,
+      "actual_bytes": 330,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/tokenizer_config.json",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\tokenizer_config.json",
+      "expected_bytes": 12666,
+      "expected_sha256": null,
+      "actual_bytes": 12666,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "qwen-aligner/vocab.json",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen-aligner\\vocab.json",
+      "expected_bytes": 2776833,
+      "expected_sha256": null,
+      "actual_bytes": 2776833,
+      "status": "ok-no-hash"
+    },
+    {
+      "repo_path": "Confucius4-R2T2-GGUF/Confucius4-R2T2-Q8_0.gguf",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\Confucius4-R2T2-Q8_0.gguf",
+      "expected_bytes": 1834422208,
+      "expected_sha256": "151097e43957a19984ea7de66e8144ce69b95039eb31c93da4f58db367e455c3",
+      "actual_bytes": 1834422208,
+      "actual_sha256": "5741f74d72fe4076a017b0eb80929c248b6a0ec328501de30b7ecb188f6deb65",
+      "hash_seconds": 1.4,
+      "status": "sha256-mismatch"
+    },
+    {
+      "repo_path": "Confucius4-R2T2-GGUF/mmproj-Confucius4-R2T2-Q8_0.gguf",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\mmproj-Confucius4-R2T2-Q8_0.gguf",
+      "expected_bytes": 348336544,
+      "expected_sha256": "8dc2c67e6a0484114928142d098db7ad94ae9f34c78948ef9d37a9678418cb65",
+      "status": "missing",
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "repo_path": "FireRedVAD-ONNX/fireredvad_stream_vad_with_cache.onnx",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX\\fireredvad_stream_vad_with_cache.onnx",
+      "expected_bytes": 2306042,
+      "expected_sha256": "b3c97836130dc34fc32d56fab551e88cf9454511de2b3c250a5e6578dee74b93",
+      "status": "missing",
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "repo_path": "FireRedVAD-ONNX/cmvn.ark",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX\\cmvn.ark",
+      "expected_bytes": 1311,
+      "expected_sha256": "c87f6f13edf0f0ec7535ddfc9cc3387d9268cb234b70182d566c5e2edf3ca473",
+      "status": "missing",
+      "actual_bytes": null,
+      "actual_sha256": null
+    },
+    {
+      "repo_path": "campplus-zh-en.onnx",
+      "local_path": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\user\\drama3_t8\\native-host\\models\\campplus-zh-en.onnx",
+      "expected_bytes": null,
+      "expected_sha256": null,
+      "status": "missing",
+      "actual_bytes": null,
+      "actual_sha256": null
+    }
+  ]
+}

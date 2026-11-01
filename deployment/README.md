@@ -246,17 +246,65 @@ python .\deployment\_dl_fast.py .\deployment\drama3_batch.json --workers 256 --c
 
 ---
 
-## 10. 目录结构
+## 10. 最终验收（2026-11-01）
+
+`deployment/_drama3_accept.py` 是无人值守验收脚本：等全部 `.parts` 位图清零 →
+逐个 sha256 对照上游 → 提交端到端冒烟测试 → 轮询 `/history` 确认出音频 → 写报告。
+
+**结果：passed**（`drama3_final_acceptance.json` / `.md`）
+
+| 项 | 结果 |
+|---|---|
+| 权重校验 | 19 项通过 / 0 失败，其中 11 项走了 sha256 |
+| 主模型 `drama3-t8-fp8.safetensors` | 38,578,460,824 B，sha256 `013fe091…b276442` ✓ |
+| 端到端 TTS | `prompt_id=25213ccf`，**success**，151.66 s 出音频 |
+| 产出音频 | `D:\ComfyUI\output\Drama3_T8\smoke_test_00001.flac`，FLAC PCM_16 / 单声道 / 44.1 kHz / **5.20 s**，peak 0.140、rms 0.0197、非静音 |
+| 专家缓存 | `4095 experts (12.0 GiB), 80% of 35840 expert reads hit` |
+
+### 三个必须知道的坑
+
+**① 同一文件被两个下载器同时写 = 字节损坏。**
+第一个下载器（`drama3_chunked.py`）与 `_dl_fast.py` 并发写同一个输出文件和同一份
+`.parts` 位图，两者各自覆写整份位图。主模型因此出现 **70 个坏块**（字节数正确、
+sha256 不符）。规律可定位：它的 worker 分片是 `stride = 4599//8 = 574`，
+worker w 负责索引 `w, w+574, w+1148…`，所以受污染的正是 `index % 574 < 8` 那 71 块。
+`_drama3_repair_main.py` 按这个指纹只重取 71 块做逐字节比对修复，**576 MB / 62 秒**，
+主模型随即哈希命中。**结论：任何时刻一个文件只允许一个下载器。**
+
+**② HF tree API 的 `lfs.sha256` 不是文件内容哈希。**
+对每一个文件它都与真实内容哈希不符（如 line-head：tree `f6fd7117…` vs 真实
+`59ca2d32…`）。**唯一权威基准是 `model-manifest.json` 里的 sha256。**
+
+**③ `campplus-zh-en.onnx` 不在 `model-manifest.json` 里**，没有任何权威哈希；
+tree API 给的 `d889dde2…` 同样是错的（真实为 `aa3cfc16…`）。
+对它改用**功能验证**：直接调用插件自己的 `SpeakerEmbedder`
+（`drama3_t8/creative_transcript.py`），5 项元数据契约全中
+（`framework=3d-speaker` / `feature_normalize_type=global-mean` /
+`sample_rate=16000` / `normalize_samples=1` / 输入 `shape[-1]==80`），
+在冒烟测试产出的真实音频上跑出 **192 维归一化嵌入**，判定 pass。
+见 `drama3_campplus_check.json`。
+
+---
+
+## 11. 目录结构
 
 ```
 deployment/
     Deploy-Drama3.ps1            一键部署
     README.md                    本文件
     drama3_batch.json            11 个权重的下载清单（目标路径 + 精确字节数）
-    _dl_fast.py                  高并发分块下载器
+    _dl_fast.py                  高并发分块下载器（256 并发，位图续传）
     drama3_model_manifest.json   模型清单（含 sha256）
+    drama3_upstream_model_manifest.json  上游权威清单（校验基准）
     drama3_deps_report.md        依赖 / transformers 决策 / R2T2 运行时完整证据
     drama3_workflow_report.md    19 个工作流的校验与修正日志
     drama3_smoke_test_api.json   端到端冒烟测试（API 格式）
+    drama3_final_acceptance.json 验收报告（机器可读）
+    drama3_final_acceptance.md   验收报告（人读）
+    drama3_campplus_check.json   campplus 功能验证证据
+    drama3_smoke_test_output.flac  冒烟测试产出的真实音频
+    _drama3_accept.py            无人值守验收脚本
+    _drama3_repair_main.py        并发污染分块的定位与修复
+    _drama3_campplus_plugin_check.py  用插件自身类做 campplus 功能验证
     drama3_workflows/            适配后的 19 个工作流
 ```
