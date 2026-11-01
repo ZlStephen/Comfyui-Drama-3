@@ -1,0 +1,28 @@
+{
+  "issue": "models/asr/qwen-aligner/model.safetensors was a 100%-zero placeholder of the correct size",
+  "detected_by": "workflow_align -> T8DramaAlign -> SafetensorError: Error while deserializing header: invalid JSON in header: EOF while parsing a value at line 1 column 0",
+  "why_it_missed_the_sha256_pass": "upstream model-manifest.json gives qwen-aligner/model.safetensors a byte count but no sha256, so the acceptance sweep had nothing to compare it against",
+  "root_cause": "hf_hub_download(local_dir=...) left the payload in local_dir/.cache/huggingface/... and the cache was removed afterwards, leaving a same-size empty shell",
+  "repair": {
+    "method": "deployment/_parallel_download.py, 64 workers x 8 MiB ranges (its 'already_present' check treats an all-zero chunk as NOT downloaded, so no zero chunk is trusted)",
+    "source": "https://hf-mirror.com/t8star/Drama-3-Comfy/resolve/main/qwen-aligner/model.safetensors",
+    "bytes": 1835544544,
+    "sha256": "47831d0e82f96b20e9034dba01a075ee06436654719f6a68289e49f1b65ce0e7",
+    "sha256_source": "HF LFS metadata lfs.oid for the LFS-backed file (verified byte-for-byte against the downloaded file)",
+    "safetensors_header_bytes": 86744,
+    "tensors": 708,
+    "elapsed_s": 598.6,
+    "throughput_mb_s": 2.92
+  },
+  "also_restored": [
+    "models/asr/qwen-aligner/download-revision.json (106 B) - upstream manifest lists it, it was never on disk",
+    "models/asr/qwen-aligner/README.md (57456 B) - upstream manifest lists it, it was never on disk"
+  ],
+  "verification": {
+    "workflow": "deployment/workflows/workflow_align.json",
+    "prompt_id": "47c55fc6-f3fc-4f0c-b1f1-06280c0ef15b",
+    "status": "success",
+    "elapsed_s": 8,
+    "word_timeline": "你@0.00-0.16 | 好@0.16-0.56 | 这@1.28-1.44 | 是@1.44-1.68 | 本@1.68-1.92 | 地@2.72-3.04 | 语@3.04-3.20 | 音@3.20-3.44 | 测@3.44-3.68 | 试@4.64-4.96"
+  }
+}

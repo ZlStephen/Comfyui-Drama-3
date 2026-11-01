@@ -68,6 +68,15 @@ for cls in classes:
 
 SKIP = -0.7
 
+# Semantic overrides: slots whose stored value is legal but the WRONG one.
+# T8DramaTranscribe.asr_model held the forced-aligner weights; it only worked
+# because a non-empty model_path outranks the combo (nodes.py:347-370), and it
+# would break the moment a user clears model_path. Type- and option-based
+# alignment cannot catch this - the value IS a legal option - so it is stated.
+OVERRIDES = {
+    ("T8DramaTranscribe", "asr_model"): "qwen3-asr-06b.safetensors",
+}
+
 
 def match_score(slot, value):
     t = slot["type"]
@@ -139,6 +148,7 @@ def rebuild(node):
     pairs = align(slots, values)
     out = []
     used = set()
+    overridden = []
     for i, slot in enumerate(slots):
         hit = next((j for (si, j) in pairs if si == i), None)
         if hit is not None:
@@ -146,9 +156,15 @@ def rebuild(node):
             out.append(values[hit])
         else:
             out.append(slot["default"])
+    for i, slot in enumerate(slots):
+        forced = OVERRIDES.get((node.get("type", ""), slot["name"]))
+        if forced is not None and out[i] != forced:
+            out[i] = forced
+            overridden.append(f"{slot['name']}={forced}")
     dropped = [values[j] for j in range(len(values)) if j not in used]
     node["widgets_values"] = out
     return {"kept": len(used), "slots": len(slots), "dropped": dropped,
+            "overridden": overridden,
             "names": [slots[i]["name"] for i, _ in pairs]}
 
 
@@ -161,7 +177,7 @@ for fname in sorted(os.listdir(WF_DIR)):
     changes = []
     for node in wf.get("nodes", []):
         res = rebuild(node)
-        if res and res["dropped"]:
+        if res and (res["dropped"] or res.get("overridden")):
             changes.append({"node": node.get("type"), "id": node.get("id"), **res})
     if changes:
         report[fname] = changes
@@ -173,8 +189,10 @@ for fname, changes in report.items():
     print(f"\n=== {fname}")
     for c in changes:
         print(f"   {c['node']:<24} id={c['id']:<3} kept={c['kept']}/{c['slots']} "
-              f"dropped={c['dropped']}")
+              f"dropped={c['dropped']} overridden={c.get('overridden')}")
         print(f"      matched: {c['names']}")
 
-json.dump(report, open(r"H:\Object\Comfyui mcp\drama3_workflow_rebuild.json", "w",
-                        encoding="utf-8"), ensure_ascii=False, indent=2)
+out_report = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          "workflow_rebuild_report.json")
+json.dump(report, open(out_report, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+print(f"\nreport -> {out_report}")

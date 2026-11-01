@@ -1,0 +1,21 @@
+{
+  "workflow_asr.json": [
+    {
+      "node": "T8DramaTranscribe",
+      "id": 2,
+      "kept": 5,
+      "slots": 5,
+      "dropped": [],
+      "overridden": [
+        "asr_model=qwen3-asr-06b.safetensors"
+      ],
+      "names": [
+        "asr_model",
+        "language",
+        "context",
+        "model_path",
+        "max_new_tokens"
+      ]
+    }
+  ]
+}

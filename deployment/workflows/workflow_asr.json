@@ -75,7 +75,7 @@
         "Node name for S&R": "T8DramaTranscribe"
       },
       "widgets_values": [
-        "qwen-aligner\\model.safetensors",
+        "qwen3-asr-06b.safetensors",
         "Chinese",
         "",
         "J:\\ComfyUI-Shared\\models\\asr\\qwen3-asr-06b.safetensors",
