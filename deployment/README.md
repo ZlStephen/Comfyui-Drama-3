@@ -412,3 +412,101 @@ python deployment/qa/run_workflow.py workflow_asr.json overrides.json
 `run_workflow.py` 用插件自己的 schema 做控件顺序映射，把 UI 工作流转成 API 提示词，
 **跑的就是用户加载的那张工作流文件本身**，不是另搭一个相似的提示词。
 
+---
+
+## 14. R2T2 在 sm_89 上会**杀死整个 ComfyUI**（已加闸门拦截）
+
+### 14.1 现象与证据
+
+`workflow_r2t2` 一跑，ComfyUI 进程直接消失，日志末段是：
+
+```
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 24563 MiB):
+  Device 0: NVIDIA GeForce RTX 4090, compute capability 8.9, VMM: yes
+CUDA error: no kernel image is available for execution on the device
+  current device: 0, in function ggml_cuda_kernel_can_use_pdl
+    cudaFuncGetAttributes(&attr, kernel)
+Fatal Python error: Aborted
+  File "...\drama3_t8\r2t2\native.py", line 179 in transcribe
+  File "...\drama3_t8\r2t2\transcribe.py", line 32 in _transcribe_pcm
+  File "...\drama3_t8\nodes.py", line 454 in execute
+```
+
+**根因**：随附的 `r2t2-runtime/backends/ggml-cuda.dll` 是 **CUDA 12.8 只针对 Blackwell 编译的**
+——二进制里能扫到的架构标记只有 `sm_120a`，**没有 sm_89 的 cubin、也没有 PTX 供 JIT**。
+RTX 4090 是 sm_89，于是第一个 kernel 启动就报「无可用内核」。
+
+`GGML_CUDA_PDL=0` 只会把报错点从 `ggml_cuda_kernel_can_use_pdl` 挪到 `ggml_cuda_kernel_launch`，
+**不解决问题**。`drama3_t8/r2t2/native.py` 在找不到 CUDA 后端时直接 `raise`，
+**没有 CPU 回退路径**。
+
+> 这是 C 层的 `abort()`，**Python 的 try/except 拦不住**——所以它不是「一个节点报错」，
+> 是「整个 ComfyUI 进程猝死」，你在界面上看到的就是应用直接没了。
+
+### 14.2 修法：进原生层之前先比架构
+
+新增 `drama3_t8/r2t2/arch_guard.py`，在 `NativeQ8Engine.__init__` 里、
+**第一次调用原生函数之前**检查：
+
+1. 从 `ggml-cuda.dll` 扫出它支持的架构集合（`sm_(\d{2,3})`）；
+2. 问驱动当前设备的 compute capability（torch 优先，回退 ctypes `cuDeviceGetAttribute`）；
+3. 设备架构不在集合里 → 抛**普通 Python 异常**，并指明替代方案。
+
+闸门是保守的：读不到设备、读不出架构、找不到 DLL 时**一律放行**（不制造新的失败）。
+需要强行尝试时设 `DRAMA_R2T2_ALLOW_UNSUPPORTED_ARCH=1`。
+
+修完的效果（同一台机器、同一个工作流、两次独立验证）：
+
+| 场景 | 结果 |
+|---|---|
+| 无闸门（旧行为） | `Fatal Python error: Aborted` → **ComfyUI 进程消失** |
+| 有闸门（当前） | 干净的 `RuntimeError`，**ComfyUI 存活**，提示改用 `T8DramaTranscribe` / `T8DramaAlign` |
+
+### 14.3 现状：R2T2 在本机不可用，ASR 请走 Qwen3-ASR
+
+**本机（RTX 4090 / sm_89）上 R2T2 走不通**，这不是配置问题，是随附二进制的编译目标问题。
+要真正启用，需要重编 `ggml-cuda.dll`（需 CUDA Toolkit 的 `nvcc` + 对应版本的 llama.cpp 源码；
+本机两者都没有，且 `E:\Confucius4-R2T2\.reference\llama.cpp` 只是编译期嵌入的路径字符串）。
+
+**替代路径（本机已验证可用）**：
+
+- 转写 → `T8DramaTranscribe`（Qwen3-ASR 0.6B，`qwen3-asr-06b.safetensors`），中文识别正常
+- 词级时间戳 → `T8DramaAlign`（Qwen3 强制对齐器，`qwen-aligner/`）
+- 字幕 → `T8DramaSRT`
+
+`workflow_r2t2.json` 仍然保留在交付目录里（架构匹配到 sm_120 的机器上直接可用），
+在本机上会干净地拒绝并给出说明。
+
+---
+
+## 15. 部署与运行注意事项（Windows + 24GB 单卡）
+
+| 事项 | 说明 |
+|---|---|
+| **端口** | Comfy Desktop 占用 **8188** 且会自启、自抢端口。要跑第二实例（QA、回归）就用别的端口，例如 `--port 8200`；否则日志会是 `Port 8188 is already in use`。 |
+| **资产扫描** | `--enable-assets` 会在每次提示词后扫 `models/input/output`。`D:\ComfyUI\output` 路径多时，一次**完整扫描**实测 **891 秒**（116,510 个文件），期间界面基本卡死；快速扫描 0.7–1.1 秒。只做开发调试时建议去掉 `--enable-assets`。 |
+| **启动时的 pip** | ComfyUI-Manager 会在启动时补装各插件缺的依赖。本机被 `onnxruntime-gpu`（168 MB）拖住——要它的是 `comfy-mtb` / `ComfyUI_GJJ_Nodes` / `comfyui_controlnet_aux`，**Drama-3 自己只要 CPU 版 `onnxruntime`**。 |
+| **FLAC 输入** | 本机 PyAV **不能解码 FLAC**，`LoadAudio` 会报 `No audio frames decoded`。喂音频前用 `soundfile` 转成 PCM_16 WAV。 |
+| **`session_file` 下拉** | `T8DramaLoadSession.session_file` 是**运行时填充**的下拉（列 `<输出目录>/drama3_t8_sessions/*.safetensors`）。交付的工作流里留空是有意的——你在界面上选即可。会话文件在 `T8DramaSaveSession` 之后才出现，所以**先存会话、再用**，中途要刷新一次。 |
+| **完整工程包** | `T8DramaCreativeProjectImport` 的 `bundle_path` 要指向**导出节点产出的完整工程包**（`<输出目录>/drama3_t8_creative/project-<uuid>.zip`，内含 3 个成员：`manifest.json` + `project.zip` + `voices.zip`）。**不是** `.bundle-staging/…/project.zip` 那个内层包——直接喂内层包会报 `工程包成员数量超限`（导入器限制外层 ≤ 3 个成员）。 |
+| **会话/工程目录** | 创作工程与声音库在 `<ComfyUI>/user/drama3_t8/creative/`（`projects/`、`voice-library/`、`.bundle-staging/`）。 |
+
+---
+
+## 16. QA 转换器的两个坑（`deployment/qa/run_workflow.py`）
+
+1. **`force_input=True` 的输入是链接，不是控件。**
+   核心节点 `SaveText` 的 `text` 声明为 `io.String.Input("text", force_input=True)`——
+   类型是 STRING，但它在界面上是**连线口**，不占控件槽位。
+   早期版本把它当控件，导致后面每个控件值**整体错位一格**，`format` 直接缺失：
+   `Required input is missing: format`。
+   现在按 `/object_info` 里的 `force_input` 标记过滤，槽位才正确。
+
+2. **核心节点的必填控件也得送。**
+   `SaveAudio.filename_prefix`、`SaveText.format` 这类**核心节点**的必填控件，
+   漏送会让 ComfyUI 跳过该节点，而提示词**照样报 success**——音频根本没落盘。
+   所以槽位表必须**从 live `/object_info` 泛化推导**，不能只覆盖 T8Drama 节点。
+
+验证：`python deployment/qa/check_workflows.py` → `workflow files: 19 / widget values checked: 504 / PROBLEMS: 0`。
+
+

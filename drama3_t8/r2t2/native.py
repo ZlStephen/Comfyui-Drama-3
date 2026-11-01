@@ -142,6 +142,13 @@ def parse_raw(raw, language=None):
 class NativeQ8Engine:
     def __init__(self, model, projector, *, n_ctx=8192, n_threads=8, check_cancel=None):
         model, projector = verify_file(model, "model"), verify_file(projector, "projector")
+        # Refuse before the first native call when the shipped CUDA backend has
+        # no kernels for this GPU: llama.cpp aborts the process there, and a
+        # C-level abort takes ComfyUI down with it.
+        from .arch_guard import check as _arch_check
+        refusal = _arch_check(runtime_directory())
+        if refusal:
+            raise RuntimeError(refusal)
         self._lib = _load_library()
         self._lock = threading.RLock()
         self._handle = None
