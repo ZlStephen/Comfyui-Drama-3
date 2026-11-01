@@ -35,8 +35,8 @@
         "drama3-codec.safetensors",
         12,
         "torch",
-        "",
-        "",
+        "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+        "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
         "",
         "",
         "compact",
@@ -73,7 +73,7 @@
         "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        ""
+        "ref_host.wav"
       ]
     },
     {
@@ -577,7 +577,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "先选参考录音并填写准确原文，再运行。新建音色会保存独立UUID和版本，连线使用该准确版本。\n默认用户目录保存工程/音色，资料不随插件更新覆盖；自定义时请统一修改所有library_path。\nBatch每句3候选，默认先选首个有效Take；试听/评分/选片可在Studio继续。\n右侧交付ZIP含成片/分句/字幕；完整工程ZIP另含Session和实际音色素材。\n续做请打开workflow_creative_bundle_resume / workflow_creative_project_resume，保留工程ID、模型、参数和seed_text，不要反复新建。\nChoose reference audio and enter its exact transcript. Keep model/seed/options unchanged to resume.\nVoice and project data live outside the plugin; delivery and complete project are separate ZIPs."
+        "先选参考录音并填写准确原文，再运行。新建音色会保存独立UUID和版本，连线使用该准确版本。\n默认用户目录保存工程/音色，资料不随插件更新覆盖；自定义时请统一修改所有library_path。\nBatch每句3候选，默认先选首个有效Take；试听/评分/选片可在Studio继续。\n右侧交付ZIP含成片/分句/字幕；完整工程ZIP另含Session和实际音色素材。\n续做请打开workflow_creative_bundle_resume / workflow_creative_project_resume，保留工程ID、模型、参数和seed_text，不要反复新建。\nChoose reference audio and enter its exact transcript. Keep model/seed/options unchanged to resume.\nVoice and project data live outside the plugin; delivery and complete project are separate ZIPs.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     }

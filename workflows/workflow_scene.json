@@ -35,8 +35,8 @@
         "drama3-codec.safetensors",
         12,
         "torch",
-        "",
-        "",
+        "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+        "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
         "",
         "",
         "compact",
@@ -93,7 +93,6 @@
         "Two friends begin a journey.",
         "- Anna: a calm young woman.\n- Ben: a cheerful young man.",
         44,
-        "fixed",
         180,
         "",
         "together",
@@ -247,7 +246,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "可选 session 输入保留导演指令、参考音色与历史；references 未连接时继承会话参考，连接后替换。\nConnect session for direction, voices and history; leave references unconnected to inherit the Session voices.\ngeneration_mode：together 同场生成；per_line 逐句；per_line_context 逐句听前句；per_speaker 按角色生成后还原剧本顺序。\nSelect any of the four generation modes in the scene node.\nsplit_long_text 可用于全部四模式；chunk_bytes 限每次新剧本 UTF-8 字节（含标签/分隔符），历史另受模型上下文限制。同原台词分块间不加静音。\nEnable split_long_text for all modes; chunk_bytes includes new-script tags/separators. No extra gap between chunks of one original line.\n参考转写前加 <|speaker:0|> / <|speaker:1|>；剧本使用相同标签，或让 Anna / Ben 按首次出现顺序映射到 0 / 1。name 只作显示，不绑定音色。\nPrefix reference transcripts with matching speaker:0 / speaker:1 tags. Use the same script tags, or first-seen Anna / Ben mapping to 0 / 1. Reference name is display-only.\n加载器支持 FP8、INT8、W6、W4；可填写 model_path / codec_path 自定义位置。expert_placement 默认 ram；vram 要求完整单卡驻留，显存不足明确拒绝。moe_backend / cuda_graph 记录实际后端与回退。\nChoose your checkpoint and custom paths. expert_placement=ram uses a cache; vram requires full single-GPU residency and rejects insufficient memory. Kernel and Graph fallbacks are recorded separately."
+        "可选 session 输入保留导演指令、参考音色与历史；references 未连接时继承会话参考，连接后替换。\nConnect session for direction, voices and history; leave references unconnected to inherit the Session voices.\ngeneration_mode：together 同场生成；per_line 逐句；per_line_context 逐句听前句；per_speaker 按角色生成后还原剧本顺序。\nSelect any of the four generation modes in the scene node.\nsplit_long_text 可用于全部四模式；chunk_bytes 限每次新剧本 UTF-8 字节（含标签/分隔符），历史另受模型上下文限制。同原台词分块间不加静音。\nEnable split_long_text for all modes; chunk_bytes includes new-script tags/separators. No extra gap between chunks of one original line.\n参考转写前加 <|speaker:0|> / <|speaker:1|>；剧本使用相同标签，或让 Anna / Ben 按首次出现顺序映射到 0 / 1。name 只作显示，不绑定音色。\nPrefix reference transcripts with matching speaker:0 / speaker:1 tags. Use the same script tags, or first-seen Anna / Ben mapping to 0 / 1. Reference name is display-only.\n加载器支持 FP8、INT8、W6、W4；可填写 model_path / codec_path 自定义位置。expert_placement 默认 ram；vram 要求完整单卡驻留，显存不足明确拒绝。moe_backend / cuda_graph 记录实际后端与回退。\nChoose your checkpoint and custom paths. expert_placement=ram uses a cache; vram requires full single-GPU residency and rejects insufficient memory. Kernel and Graph fallbacks are recorded separately.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     },
@@ -271,7 +270,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget."
+        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     }

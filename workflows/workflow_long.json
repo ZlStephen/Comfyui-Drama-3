@@ -35,8 +35,8 @@
         "drama3-codec.safetensors",
         12,
         "torch",
-        "",
-        "",
+        "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+        "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
         "",
         "",
         "compact",
@@ -126,14 +126,14 @@
         "",
         48,
         42,
-        "fixed",
         0.7,
         0.7,
         30,
         180,
         "",
         0,
-        "custom"
+        "custom",
+        false
       ]
     },
     {
@@ -277,7 +277,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget."
+        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     }

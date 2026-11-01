@@ -34,8 +34,8 @@
         "drama3-codec.safetensors",
         12,
         "torch",
-        "",
-        "",
+        "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+        "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
         "",
         "",
         "compact",
@@ -77,7 +77,7 @@
         "Node name for S&R": "T8DramaCreativeProjectImport"
       },
       "widgets_values": [
-        "",
+        "D:\\ComfyUI\\input\\drama3\\project_bundle.zip",
         "",
         ""
       ],
@@ -246,7 +246,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "bundle_path填写完整工程ZIP的本机路径（Studio或本组其他画布导出），不是普通交付ZIP。\n导入新工程并保留原音色UUID/版本；素材放项目私有库，不覆盖全局同名音色。\n续做时保持模型与生成参数、模式、seed_text一致；只有指纹匹配且媒体SHA完整的候选会跳过。\n若原工程不是per_line_context，请把Batch模式/参数改成原工程值；takes_per_line是目标总数。\n导入只做一次。再次打开已有工程请用workflow_creative_project_resume，避免重新导入出新副本。\nImport a complete project ZIP, then match original model/options/seeds for resume.\nThe imported voice assets stay in this project's private catalog. Use workflow_creative_project_resume to reopen it later."
+        "bundle_path填写完整工程ZIP的本机路径（Studio或本组其他画布导出），不是普通交付ZIP。\n导入新工程并保留原音色UUID/版本；素材放项目私有库，不覆盖全局同名音色。\n续做时保持模型与生成参数、模式、seed_text一致；只有指纹匹配且媒体SHA完整的候选会跳过。\n若原工程不是per_line_context，请把Batch模式/参数改成原工程值；takes_per_line是目标总数。\n导入只做一次。再次打开已有工程请用workflow_creative_project_resume，避免重新导入出新副本。\nImport a complete project ZIP, then match original model/options/seeds for resume.\nThe imported voice assets stay in this project's private catalog. Use workflow_creative_project_resume to reopen it later.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     }

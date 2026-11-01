@@ -36,8 +36,8 @@
         "drama3-codec.safetensors",
         12,
         "torch",
-        "",
-        "",
+        "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+        "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
         "",
         "",
         "compact",
@@ -74,7 +74,7 @@
         "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        ""
+        "ref_host.wav"
       ],
       "title": "选择参考音频 / Choose reference audio"
     },
@@ -210,14 +210,14 @@
         "",
         300,
         42,
-        "fixed",
         0.7,
         0.7,
         30,
         180,
         "",
         0,
-        "custom"
+        "custom",
+        false
       ]
     },
     {
@@ -391,7 +391,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "在 LoadAudio 上传参考音频，并把 transcript 改为真实台词；角色绑定用转写前的 <|speaker:0|> / <|speaker:1|>，name 仅显示。\nUpload audio and enter its exact transcript with matching speaker tags; name is display-only.\n多参考：将前一个 references 输出接下一个 previous。保存音色分支写入仅含 references 的会话，再用 workflow_load_session.json 复用。\nChain references into previous for multiple voices. Save reusable references, then open workflow_load_session.json."
+        "在 LoadAudio 上传参考音频，并把 transcript 改为真实台词；角色绑定用转写前的 <|speaker:0|> / <|speaker:1|>，name 仅显示。\nUpload audio and enter its exact transcript with matching speaker tags; name is display-only.\n多参考：将前一个 references 输出接下一个 previous。保存音色分支写入仅含 references 的会话，再用 workflow_load_session.json 复用。\nChain references into previous for multiple voices. Save reusable references, then open workflow_load_session.json.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     },
@@ -415,7 +415,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget."
+        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     }

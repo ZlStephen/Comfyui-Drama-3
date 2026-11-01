@@ -12,3 +12,6 @@ __pycache__/
 /portable/.updates/
 /portable/release_packages/
 /portable/validation/
+
+# upstream v0.3.2 workflows that fail the current schema (see deployment/README.md 13.1)
+workflows_upstream_v0.3.2_stale/

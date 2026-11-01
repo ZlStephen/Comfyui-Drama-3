@@ -30,7 +30,7 @@
         "Node name for S&R": "LoadAudio"
       },
       "widgets_values": [
-        ""
+        "ref_host.wav"
       ],
       "title": "上传音频 / Upload audio"
     },
@@ -82,9 +82,9 @@
         "Node name for S&R": "T8DramaR2T2Transcribe"
       },
       "widgets_values": [
-        "asr/Confucius4-R2T2-GGUF/Confucius4-R2T2-Q8_0.gguf",
-        "asr/Confucius4-R2T2-GGUF/mmproj-Confucius4-R2T2-Q8_0.gguf",
-        "asr/FireRedVAD-ONNX",
+        "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\Confucius4-R2T2-Q8_0.gguf",
+        "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\mmproj-Confucius4-R2T2-Q8_0.gguf",
+        "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX",
         "Chinese",
         "",
         ""
@@ -212,7 +212,7 @@
         "Node name for S&R": "Note"
       },
       "widgets_values": [
-        "在 LoadAudio 上传或选择本地音频；运行后，在文字预览节点中查看结果。\nUpload or select audio in LoadAudio; after Run, read the results in the Preview as Text nodes.\n模型、投影器和 VAD 路径相对于 ComfyUI/models，也可填写绝对路径。\nModel, projector and VAD paths accept absolute paths or paths relative to ComfyUI/models."
+        "在 LoadAudio 上传或选择本地音频；运行后，在文字预览节点中查看结果。\nUpload or select audio in LoadAudio; after Run, read the results in the Preview as Text nodes.\n模型、投影器和 VAD 路径相对于 ComfyUI/models，也可填写绝对路径。\nModel, projector and VAD paths accept absolute paths or paths relative to ComfyUI/models.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
       ],
       "title": "使用说明 / Instructions"
     }
