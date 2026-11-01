@@ -308,3 +308,23 @@ deployment/
     _drama3_campplus_plugin_check.py  用插件自身类做 campplus 功能验证
     drama3_workflows/            适配后的 19 个工作流
 ```
+
+---
+
+## 12. TTS → ASR 闭环回环（2026-11-01）
+
+最强的端到端证据：插件自己的 TTS 生成音频，插件自己的 ASR 再读回文字。
+
+| 环节 | 证据 |
+|---|---|
+| 输入文本 | `你好，这是 DRAMA-3 本地语音合成冒烟测试。` |
+| TTS 产出 | `smoke_test_00001.flac` → FLAC PCM_16 / 单声道 / 44.1 kHz / 5.20 s / peak 0.140 / rms 0.0197 |
+| ASR 回环 | `prompt_id=df048437…`，**success**，2.79 s，`Qwen3ASRModel 1492MB Staged` |
+| ASR 读回 | **`您好，这是抓马三本地语音合成冒烟测试。`** |
+
+读回文本与输入**语义完全一致**（`你好`→`您好` 同义，`DRAMA-3`→`抓马三` 为该词的中文音译，
+`本地语音合成冒烟测试` 逐字命中）——证明模型发出的确实是可懂的中文语音，不是噪声。
+
+复现：`python .\deployment\_drama3_roundtrip.py`
+（工作流 `drama3_roundtrip_api.json`；音频需为 WAV——本机 ComfyUI 的 PyAV 不解码 FLAC，
+`LoadAudio` 会报 `No audio frames decoded`，用 `soundfile` 转 PCM_16 WAV 即可。）

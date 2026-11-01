@@ -1,0 +1,16 @@
+{
+  "1": {
+    "class_type": "LoadAudio",
+    "inputs": { "audio": "drama3_smoke_test.wav", "force_reload": false }
+  },
+  "2": {
+    "class_type": "T8DramaTranscribe",
+    "inputs": {
+      "asr_model": "qwen3-asr-06b.safetensors",
+      "audio": ["1", 0],
+      "language": "Chinese",
+      "context": "",
+      "max_new_tokens": 1024
+    }
+  }
+}
