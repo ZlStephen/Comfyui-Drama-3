@@ -1,0 +1,518 @@
+{
+  "last_node_id": 11,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "T8DramaLoader",
+      "pos": [
+        60,
+        60
+      ],
+      "size": [
+        370,
+        430
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "DRAMA3_T8_ENGINE",
+          "type": "DRAMA3_T8_ENGINE",
+          "links": [
+            1,
+            5,
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "T8DramaLoader"
+      },
+      "widgets_values": [
+        "drama3-t8-fp8.safetensors",
+        "drama3-codec.safetensors",
+        12,
+        "torch",
+        "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+        "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
+        "",
+        "",
+        "compact",
+        "auto",
+        true,
+        "ram"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "LoadAudio",
+      "pos": [
+        60,
+        520
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "ref_host.wav"
+      ],
+      "title": "选择参考音频 / Choose reference audio"
+    },
+    {
+      "id": 3,
+      "type": "T8DramaReference",
+      "pos": [
+        480,
+        60
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "engine",
+          "type": "DRAMA3_T8_ENGINE",
+          "link": 1
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 2
+        },
+        {
+          "name": "previous",
+          "type": "DRAMA3_T8_REFERENCES",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "DRAMA3_T8_REFERENCES",
+          "type": "DRAMA3_T8_REFERENCES",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "T8DramaReference"
+      },
+      "widgets_values": [
+        "请填写参考音频中实际说出的文字。",
+        "Narrator",
+        false,
+        false
+      ]
+    },
+    {
+      "id": 4,
+      "type": "T8DramaSession",
+      "pos": [
+        900,
+        60
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "references",
+          "type": "DRAMA3_T8_REFERENCES",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "DRAMA3_T8_SESSION",
+          "type": "DRAMA3_T8_SESSION",
+          "links": [
+            4,
+            6
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "T8DramaSession"
+      },
+      "widgets_values": [
+        ""
+      ]
+    },
+    {
+      "id": 5,
+      "type": "T8DramaGenerate",
+      "pos": [
+        1320,
+        60
+      ],
+      "size": [
+        370,
+        540
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "engine",
+          "type": "DRAMA3_T8_ENGINE",
+          "link": 5
+        },
+        {
+          "name": "session",
+          "type": "DRAMA3_T8_SESSION",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "DRAMA3_T8_SESSION",
+          "type": "DRAMA3_T8_SESSION",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "T8DramaGenerate"
+      },
+      "widgets_values": [
+        "speech",
+        "你好，这是本地语音测试。",
+        "",
+        300,
+        42,
+        "fixed",
+        0.7,
+        0.7,
+        30,
+        180,
+        "",
+        0,
+        "custom",
+        false
+      ]
+    },
+    {
+      "id": 6,
+      "type": "T8DramaSaveSession",
+      "pos": [
+        900,
+        520
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "session",
+          "type": "DRAMA3_T8_SESSION",
+          "link": 4
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "T8DramaSaveSession"
+      },
+      "widgets_values": [
+        "drama3_voice_library"
+      ],
+      "title": "保存参考音色 / Save reusable references"
+    },
+    {
+      "id": 7,
+      "type": "T8DramaDecode",
+      "pos": [
+        1740,
+        60
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "engine",
+          "type": "DRAMA3_T8_ENGINE",
+          "link": 7
+        },
+        {
+          "name": "session",
+          "type": "DRAMA3_T8_SESSION",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "T8DramaDecode"
+      },
+      "widgets_values": [
+        -1,
+        false,
+        false,
+        0.75
+      ]
+    },
+    {
+      "id": 8,
+      "type": "SaveAudio",
+      "pos": [
+        2160,
+        60
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "Drama3_T8/reference"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "PreviewAny",
+      "pos": [
+        1740,
+        520
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "生成台词 / Generated transcript"
+    },
+    {
+      "id": 10,
+      "type": "Note",
+      "pos": [
+        60,
+        980
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Note"
+      },
+      "widgets_values": [
+        "在 LoadAudio 上传参考音频，并把 transcript 改为真实台词；角色绑定用转写前的 <|speaker:0|> / <|speaker:1|>，name 仅显示。\nUpload audio and enter its exact transcript with matching speaker tags; name is display-only.\n多参考：将前一个 references 输出接下一个 previous。保存音色分支写入仅含 references 的会话，再用 workflow_load_session.json 复用。\nChain references into previous for multiple voices. Save reusable references, then open workflow_load_session.json.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
+      ],
+      "title": "使用说明 / Instructions"
+    },
+    {
+      "id": 11,
+      "type": "Note",
+      "pos": [
+        1320,
+        980
+      ],
+      "size": [
+        370,
+        260
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Note"
+      },
+      "widgets_values": [
+        "seed 数字控件支持 JavaScript 安全整数；更大的 uint64 种子请填 seed_text 十进制文本。\nUse decimal seed_text for larger uint64 seeds; leave it blank to use the numeric seed widget.\n[本机安装] 参考音频 = ref_host.wav（占位）。请替换为 D:\\ComfyUI\\input 下你自己的音色样本。\n[Local install] reference audio = ref_host.wav (placeholder). Replace with your own voice sample in D:\\ComfyUI\\input.\n[本机安装] 模型路径使用绝对路径（model_path / codec_path），指向 J:\\ComfyUI-Shared\\models；下拉框中的文件名在权重落盘并重启 ComfyUI 后自动生效。\n[Local install] model_path / codec_path are absolute paths into J:\\ComfyUI-Shared\\models; the dropdown file names become legal once the weights are on disk and ComfyUI has been restarted."
+      ],
+      "title": "使用说明 / Instructions"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      3,
+      0,
+      "DRAMA3_T8_ENGINE"
+    ],
+    [
+      2,
+      2,
+      0,
+      3,
+      1,
+      "AUDIO"
+    ],
+    [
+      3,
+      3,
+      0,
+      4,
+      0,
+      "DRAMA3_T8_REFERENCES"
+    ],
+    [
+      4,
+      4,
+      0,
+      6,
+      0,
+      "DRAMA3_T8_SESSION"
+    ],
+    [
+      5,
+      1,
+      0,
+      5,
+      0,
+      "DRAMA3_T8_ENGINE"
+    ],
+    [
+      6,
+      4,
+      0,
+      5,
+      1,
+      "DRAMA3_T8_SESSION"
+    ],
+    [
+      7,
+      1,
+      0,
+      7,
+      0,
+      "DRAMA3_T8_ENGINE"
+    ],
+    [
+      8,
+      5,
+      0,
+      7,
+      1,
+      "DRAMA3_T8_SESSION"
+    ],
+    [
+      9,
+      7,
+      0,
+      8,
+      0,
+      "AUDIO"
+    ],
+    [
+      10,
+      7,
+      1,
+      9,
+      0,
+      "STRING"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.75,
+      "offset": [
+        40,
+        40
+      ]
+    }
+  },
+  "version": 0.4
+}

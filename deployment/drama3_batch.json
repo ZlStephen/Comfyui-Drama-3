@@ -1,0 +1,12 @@
+[
+  {"file": "drama3-codec.safetensors", "out": "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors", "size": 1565647484},
+  {"file": "drama3-text-head.safetensors", "out": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-text-head.safetensors", "size": 1033371816},
+  {"file": "drama3-line-head.safetensors", "out": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-line-head.safetensors", "size": 8480},
+  {"file": "qwen3-asr-06b.safetensors", "out": "J:\\ComfyUI-Shared\\models\\asr\\qwen3-asr-06b.safetensors", "size": 1564928184, "sha256": "eb350ce7510a538eb136d8320db470a0761713c47de6e12b0fca090d4fc15ecf"},
+  {"file": "qwen3_forced_aligner_0.6b_bf16.safetensors", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\qwen3_forced_aligner_0.6b_bf16.safetensors", "size": 1835545592},
+  {"file": "Confucius4-R2T2-GGUF/Confucius4-R2T2-Q8_0.gguf", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\Confucius4-R2T2-Q8_0.gguf", "size": 1834422208},
+  {"file": "Confucius4-R2T2-GGUF/mmproj-Confucius4-R2T2-Q8_0.gguf", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\mmproj-Confucius4-R2T2-Q8_0.gguf", "size": 348336544},
+  {"file": "FireRedVAD-ONNX/fireredvad_stream_vad_with_cache.onnx", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX\\fireredvad_stream_vad_with_cache.onnx", "size": 2306042},
+  {"file": "FireRedVAD-ONNX/cmvn.ark", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX\\cmvn.ark", "size": 1311},
+  {"file": "campplus-zh-en.onnx", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\user\\drama3_t8\\native-host\\models\\campplus-zh-en.onnx", "size": 28281164}
+]

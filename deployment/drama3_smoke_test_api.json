@@ -1,0 +1,56 @@
+{
+  "1": {
+    "class_type": "T8DramaLoader",
+    "inputs": {
+      "model": "drama3-t8-fp8.safetensors",
+      "codec": "drama3-codec.safetensors",
+      "expert_cache_gb": 12,
+      "gdn_backend": "torch",
+      "model_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-t8-fp8.safetensors",
+      "codec_path": "J:\\ComfyUI-Shared\\models\\vae\\drama3-codec.safetensors",
+      "text_head_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-text-head.safetensors",
+      "line_head_path": "J:\\ComfyUI-Shared\\models\\diffusion_models\\drama3-line-head.safetensors",
+      "scene_head_mode": "compact",
+      "moe_backend": "auto",
+      "cuda_graph": true,
+      "expert_placement": "ram"
+    }
+  },
+  "2": {
+    "class_type": "T8DramaGenerate",
+    "inputs": {
+      "engine": ["1", 0],
+      "mode": "speech",
+      "text": "你好，这是 DRAMA-3 本地语音合成冒烟测试。",
+      "lookahead": "",
+      "chunk_bytes": 300,
+      "seed": 42,
+      "temperature": 0.7,
+      "top_p": 0.7,
+      "top_k": 30,
+      "max_frames": 240,
+      "seed_text": "",
+      "opening_retries": 0,
+      "sampling_preset": "custom",
+      "replace_delivery_tags": false
+    }
+  },
+  "3": {
+    "class_type": "T8DramaDecode",
+    "inputs": {
+      "engine": ["1", 0],
+      "session": ["2", 0],
+      "take_index": -1,
+      "all_takes": false,
+      "shorten_long_pauses": false,
+      "max_pause_seconds": 0.75
+    }
+  },
+  "4": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "audio": ["3", 0],
+      "filename_prefix": "Drama3_T8/smoke_test"
+    }
+  }
+}

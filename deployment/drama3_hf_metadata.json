@@ -1,0 +1,174 @@
+{
+  ".gitattributes": {
+    "size": 1692,
+    "sha256": "e333b77350c755af596d55d524d6e2112e386fa2"
+  },
+  "Confucius4-R2T2-GGUF/Confucius4-R2T2-Q8_0.gguf": {
+    "size": 1834422208,
+    "sha256": "ea9c538db3af92dafa850161d1e6dca8de32fb4b"
+  },
+  "Confucius4-R2T2-GGUF/MODEL_LICENSE": {
+    "size": 11132,
+    "sha256": "ef9b3a242432b10afc220695bb8717d7d08677e0"
+  },
+  "Confucius4-R2T2-GGUF/MODEL_LICENSE_zh": {
+    "size": 7789,
+    "sha256": "8b25fae13c3c17f1b210eece2d7501046c05c7cb"
+  },
+  "Confucius4-R2T2-GGUF/README.md": {
+    "size": 3795,
+    "sha256": "214fb6e41c2a3cc4099f01471172074474a64241"
+  },
+  "Confucius4-R2T2-GGUF/mmproj-Confucius4-R2T2-Q8_0.gguf": {
+    "size": 348336544,
+    "sha256": "e991a69cd501b0e7acd877865956f650fb0bf72f"
+  },
+  "FireRedVAD-ONNX/LICENSE": {
+    "size": 11357,
+    "sha256": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+  },
+  "FireRedVAD-ONNX/cmvn.ark": {
+    "size": 1311,
+    "sha256": "5b21592ae056b8b11ae23074542a175cdf8160a4"
+  },
+  "FireRedVAD-ONNX/fireredvad_stream_vad_with_cache.onnx": {
+    "size": 2306042,
+    "sha256": "34fe896ec7f8d74424ecedfdd0aecc79f35f4e3d"
+  },
+  "LICENSE": {
+    "size": 19799,
+    "sha256": "d983070c438f764af2872423a81f9e6c76b17e5d"
+  },
+  "README.md": {
+    "size": 5459,
+    "sha256": "ec082cb1632afab04af64226b5f02a520fc01961"
+  },
+  "README.zh-CN.md": {
+    "size": 4713,
+    "sha256": "dc87dc6f4111ad48820c100e8cc3f3167eea01bb"
+  },
+  "campplus-zh-en.onnx": {
+    "size": 28281164,
+    "sha256": "d889dde2cb6f4d1324b0c88ff448f0d07b9f5463"
+  },
+  "drama3-codec.safetensors": {
+    "size": 1565647484,
+    "sha256": "9d1b1925e017d2971008c1a3ffa8aa180977d4e2"
+  },
+  "drama3-line-head.safetensors": {
+    "size": 8480,
+    "sha256": "f6fd71175d2788f03b7b24e78f985a05784f6fc2"
+  },
+  "drama3-t8-fp8.safetensors": {
+    "size": 38578460824,
+    "sha256": "fd74607b2994fa21d5e4032876fea5715dbe424c"
+  },
+  "drama3-t8-w4a8.safetensors": {
+    "size": 24603608136,
+    "sha256": "2d9d559bc9a78c8e4f18729dd1886c9b703888c2"
+  },
+  "drama3-text-head.safetensors": {
+    "size": 1033371816,
+    "sha256": "757d276eb76b6fe9ab798afb03af38f53643838d"
+  },
+  "licenses/CONFUCIUS-MODEL_LICENSE": {
+    "size": 11132,
+    "sha256": "ef9b3a242432b10afc220695bb8717d7d08677e0"
+  },
+  "licenses/CONFUCIUS-MODEL_LICENSE_zh": {
+    "size": 7789,
+    "sha256": "8b25fae13c3c17f1b210eece2d7501046c05c7cb"
+  },
+  "licenses/LICENSE-APACHE": {
+    "size": 11554,
+    "sha256": "6de379af8db6ffca451e8a59c1810b82f86b4160"
+  },
+  "licenses/LICENSE-CAMPPLUS": {
+    "size": 11357,
+    "sha256": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+  },
+  "licenses/LICENSE-CONFUCIUS-CODE": {
+    "size": 11156,
+    "sha256": "ed20b6d02d431bab58785de12acb0f72f70f8c0d"
+  },
+  "licenses/LICENSE-FIRERED-VAD": {
+    "size": 11357,
+    "sha256": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+  },
+  "licenses/LICENSE-FISH-AUDIO": {
+    "size": 19799,
+    "sha256": "d983070c438f764af2872423a81f9e6c76b17e5d"
+  },
+  "licenses/LICENSE-LLAMA-CPP": {
+    "size": 1099,
+    "sha256": "9b3a3a7f418614c8075670cafaa5379d72a0ea59"
+  },
+  "licenses/LICENSE-TORCH-THIRD-PARTY": {
+    "size": 509053,
+    "sha256": "41eb186618e94e92822cf6b20d7b812d58edcf4d"
+  },
+  "licenses/NOTICE-CAMPPLUS.md": {
+    "size": 1449,
+    "sha256": "1db459f50a926758fc02115c66bd7b632b295d5d"
+  },
+  "licenses/NOTICE-CONFUCIUS-MODEL.txt": {
+    "size": 899,
+    "sha256": "400a808080c46443a4d96d5124bf7112aa5d6e25"
+  },
+  "licenses/NOTICE-R2T2.txt": {
+    "size": 795,
+    "sha256": "3ade1119e51d66b20897a783ee817a9dc75e7628"
+  },
+  "licenses/NOTICE-T8": {
+    "size": 888,
+    "sha256": "fa9d5362d9d1ebf567f01f96bb41567aa8b9729f"
+  },
+  "licenses/NOTICE-UPSTREAM": {
+    "size": 2391,
+    "sha256": "15d60f6404e63ab8256d0e690328bbde9b066ee1"
+  },
+  "licenses/NVIDIA-CUDA-EULA.txt": {
+    "size": 63021,
+    "sha256": "6622367aff6567f25c18f500137a36caf101ea50"
+  },
+  "licenses/QWEN3-ASR-1.7B/LICENSE": {
+    "size": 11352,
+    "sha256": "f848c2f1ebdd80f8820d8d03b54a47d6c784aff3"
+  },
+  "licenses/QWEN3-ASR-1.7B/NOTICE": {
+    "size": 765,
+    "sha256": "286b06b9a5027ac22ba62268ad890650e9dde36d"
+  },
+  "licenses/QWEN3-ASR/LICENSE-UPSTREAM": {
+    "size": 11343,
+    "sha256": "c347eb5ec781d2702623e8e2b5923fa1a766a64d"
+  },
+  "licenses/QWEN3-ASR/NOTICE-UPSTREAM.md": {
+    "size": 1813,
+    "sha256": "d08fca2baf2febc428724960cc3b6466b6055597"
+  },
+  "model-manifest.json": {
+    "size": 3737,
+    "sha256": "c858d7588ca83045876cfc236aeefbf923396679"
+  },
+  "provenance/t8-native-0.2.0.json": {
+    "size": 3052,
+    "sha256": "dfea5c6c4e3a3317ac985ef64b90aa2dc76fa980"
+  },
+  "qwen-aligner/README.md": {
+    "size": 57456,
+    "sha256": "3a67d43f21febda213ff36efdb60ef10019af7f3"
+  },
+  "qwen-aligner/chat_template.json": {
+    "size": 1161,
+    "sha256": "c44736493efd71ec96218cc626904698cdb13235"
+  },
+  "qwen-aligner/config.json": {
+    "size": 5982,
+    "sha256": "7b9883fe52d0ba896773687a7fdad38eacab062d"
+  },
+  "qwen-aligner/download-revision.json": {
+    "size": 106,
+    "sha256": "ad73413f819b578f266e649e7ef3b03820d72d20"
+  }
+}

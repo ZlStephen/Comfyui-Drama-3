@@ -1,0 +1,7 @@
+[
+  {"file": "Confucius4-R2T2-GGUF/Confucius4-R2T2-Q8_0.gguf", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\Confucius4-R2T2-Q8_0.gguf", "size": 1834422208},
+  {"file": "Confucius4-R2T2-GGUF/mmproj-Confucius4-R2T2-Q8_0.gguf", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\Confucius4-R2T2-GGUF\\mmproj-Confucius4-R2T2-Q8_0.gguf", "size": 348336544},
+  {"file": "FireRedVAD-ONNX/fireredvad_stream_vad_with_cache.onnx", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX\\fireredvad_stream_vad_with_cache.onnx", "size": 2306042},
+  {"file": "FireRedVAD-ONNX/cmvn.ark", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\models\\asr\\FireRedVAD-ONNX\\cmvn.ark", "size": 1311},
+  {"file": "campplus-zh-en.onnx", "out": "G:\\Comfy-Desktop\\ComfyUI-Installs\\ComfyUI\\ComfyUI\\user\\drama3_t8\\native-host\\models\\campplus-zh-en.onnx", "size": 28281164}
+]

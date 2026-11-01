@@ -1,0 +1,262 @@
+# Comfyui-Drama-3 · Windows 本地部署分支
+
+这是 `T8mars/Comfyui-Drama-3` 的 **Windows + 单卡 24GB 显存** 部署分支（fork 自上游 v0.3.2）。
+分支只增加 `deployment/` 目录，**插件源码与上游保持零差异**，随时可以 rebase 回上游。
+
+> 上游：<https://github.com/T8mars/Comfyui-Drama-3> · 原作者：T8 Studio / Fish Audio DRAMA-3
+
+---
+
+## 1. 这个分支解决什么问题
+
+上游插件本身是完整的，但它是**按"官方 Studio 桌面版"布局**写的：所有模型路径都相对
+`ComfyUI/models` 解析。普通用户在 Windows 上用自己的多盘模型库时，会遇到三个具体的坑：
+
+| 坑 | 现象 | 本分支的处理 |
+|---|---|---|
+| **相对路径不查共享盘** | 模型明明在 `J:\ComfyUI-Shared\models`，节点却报文件不存在 | 全部改为绝对路径，并给出推导依据 |
+| **辅助模型的真实位置和直觉不同** | text-head / line-head / ASR 模型不在 `models\asr` | 见下表 —— 它们跟着**主模型**走 |
+| **R2T2 / 对齐器被硬编码** | 这两个插件按 `ComfyUI/models/asr` 写死，换盘就找不到 | 落到 `ComfyUI\models\asr`，且已注册 `asr` 根 |
+
+---
+
+## 2. 模型落位表（关键）
+
+插件的路径解析规则是从源码读出来的，不是猜的：
+
+- `drama3_t8/engine.py:110-123` —— `text_head` / `line_head` / `asr_model` 全部从
+  **`model_path.parent`**（主模型所在目录）推导：
+
+  ```python
+  self.text_head_path = model_path.parent / "drama3-text-head.safetensors"
+  self.line_head_path = model_path.parent / "drama3-line-head.safetensors"
+  self.asr_path       = model_path.parent / "qwen3-asr-06b.safetensors"
+  ```
+
+- `drama3_t8/nodes.py:98` —— `base = folder_paths.models_dir`，**相对路径只对它解析**，
+  完全不查 `extra_model_paths.yaml` 里的共享盘。
+- `drama3_t8/nodes.py:414-424` —— 对齐器 `base = Path(folder_paths.models_dir)/"asr"` **硬编码**，
+  且执行时校验 `path.parent != base` 就报错，所以必须**直接**放在 `models\asr` 下。
+- `drama3_t8/nodes.py:440-442` —— R2T2 的 `model_path` / `projector_path` / `vad_path`
+  默认值是 `"asr/..."`，同样按 `models_dir` 解析。
+
+### 最终落位
+
+```
+J:\ComfyUI-Shared\models\diffusion_models\
+    drama3-t8-fp8.safetensors          38,578,460,824   主模型（必须与下面三个同目录）
+    drama3-text-head.safetensors            1,033,371,816
+    drama3-line-head.safetensors                 8,480
+    qwen3-asr-06b.safetensors             1,564,928,184
+
+J:\ComfyUI-Shared\models\vae\
+    drama3-codec.safetensors              1,565,647,484
+
+G:\Comfy-Desktop\ComfyUI-Installs\ComfyUI\ComfyUI\models\asr\      ← ComfyUI 自己的 models 目录
+    qwen3_forced_aligner_0.6b_bf16.safetensors  1,835,545,592
+    Confucius4-R2T2-GGUF\Confucius4-R2T2-Q8_0.gguf   1,834,422,208
+    Confucius4-R2T2-GGUF\mmproj-Confucius4-R2T2-Q8_0.gguf   348,336,544
+    FireRedVAD-ONNX\fireredvad_stream_vad_with_cache.onnx  2,306,042
+    FireRedVAD-ONNX\cmvn.ark                                    1,311
+    campplus-zh-en.onnx                              28,281,164
+
+G:\Comfy-Desktop\ComfyUI-Installs\ComfyUI\ComfyUI\user\drama3_t8\native-host\models\
+    campplus-zh-en.onnx         ← 创意节点的默认探测路径（creative_studio.py:86-87）
+```
+
+> `asr` 目录必须同时具备 `fireredvad_stream_vad_with_cache.onnx` **和** `cmvn.ark`，
+> 缺一个 `require_models` 就会拒绝加载。
+
+---
+
+## 3. 一键部署
+
+```powershell
+pwsh -File .\deployment\Deploy-Drama3.ps1
+```
+
+脚本做六件事，全部幂等：
+
+| 步骤 | 内容 | 幂等性 |
+|---|---|---|
+| 0 | 检查 ComfyUI 根目录与 venv Python | — |
+| 1 | 克隆 / `git pull` 插件 | 已存在则只更新 |
+| 2 | 安装 Python 依赖 | `--upgrade-strategy only-if-needed` |
+| 3 | 安装 R2T2 原生运行时（走插件自带 `install.py`，逐文件 sha256 校验） | 已装则校验跳过 |
+| 4 | 下载模型权重 | 已存在则跳过 |
+| 5 | 在 `extra_model_paths.yaml` 注册 `asr` 根（先自动备份） | 已注册则跳过 |
+| 6 | 逐文件校验存在性与字节数，输出 `drama3_deploy_verify.json` | 只读 |
+
+常用参数：
+
+```powershell
+pwsh -File .\deployment\Deploy-Drama3.ps1 -VerifyOnly    # 只校验，不写任何东西
+pwsh -File .\deployment\Deploy-Drama3.ps1 -SkipModels    # 跳过模型下载
+pwsh -File .\deployment\Deploy-Drama3.ps1 -ComfyRoot 'D:\ComfyUI' -ModelsRoot 'E:\models'
+```
+
+---
+
+## 4. transformers 版本：为什么本机保留 5.5.0
+
+插件 `requirements.txt` 钉的是 `transformers==4.57.1`。**本机没有降级**，原因是降级会直接
+弄坏另一个已装节点：
+
+`Higgs_v3-TTS-ComfyUI/native.py:35`
+
+```python
+from transformers import (HiggsAudioV2TokenizerConfig, HiggsAudioV2TokenizerModel, ...)
+```
+
+| transformers | `transformers/models/higgs*` | `HiggsAudioV2TokenizerConfig` |
+|---|---|---|
+| 5.5.0 | `higgs_audio_v2/` + `higgs_audio_v2_tokenizer/` 存在 | ✅ 可导入 |
+| 4.57.1 | 条目数 = 0 | ❌ ImportError → 整个包 5 个节点注册不了 |
+
+该节点的 `pyproject.toml:26` 写的是 `transformers = ">=5.3.0,<=5.5.0"`。
+
+**替代验证**：插件自带的版本契约测试在 5.5.0 上 7/7 通过（退出码 0）：
+
+```
+portable/tests/test_transformers_compat.py
+test_real_text_prefill_and_cached_token_match_full_sequence[eager] PASSED
+test_real_text_prefill_and_cached_token_match_full_sequence[sdpa]  PASSED
+test_real_text_causal_mask_prevents_future_tokens_changing_prefix[eager] PASSED
+test_real_text_causal_mask_prevents_future_tokens_changing_prefix[sdpa]  PASSED
+test_real_text_padding_mask_preserves_unpadded_outputs[eager] PASSED
+test_real_text_padding_mask_preserves_unpadded_outputs[sdpa]  PASSED
+test_native_qwen_asr_tokenizer_keeps_audio_protocol_ids_and_multilingual_text PASSED
+======= 7 passed, 1 warning in 6.61s =======
+```
+
+插件实际用到的 transformers 内部 API 在 5.5.0 上 26/26 全部存在。
+（`modeling_flash_attention_utils.FlashAttentionKeys` 与 `modeling_utils.TransformersKwargs`
+在 v0.3.2 源码里根本不存在 —— 全插件 grep 34 处命中无这两个名字；插件用的是
+`FlashAttentionKwargs` 和 `transformers.utils.generic.TransformersKwargs`，两者都在。）
+
+pip 改动记录：**新增 9 个包，删除 0 个，修改 0 个，207 个未动**
+（新增：`cython dynet38 iniconfig kaldi-native-fbank kaldiio nagisa pluggy pytest soynlp`）。
+`transformers 5.5.0` / `huggingface_hub 1.33.0` / `tokenizers 0.22.2` /
+`torch 2.12.1+cu130` / `torchaudio 2.11.0+cu130` 全部原封未动。
+
+---
+
+## 5. R2T2 原生运行时与 CUDA 版本
+
+上游 `install.py` 首次会报 `Runtime archive integrity check failed`。**这不是文件损坏**：
+
+- 资产 `Drama3-R2T2-native-win64-cu128.zip`，`Content-Length` = 610,460,680，与
+  `r2t2-runtime.json` 的 `bytes` 完全一致
+- 上游 v0.3.0 的 `SHA256SUMS.txt` 公布值 = `c075593e…3bccd`，与 manifest 一致
+- 真正原因：GitHub 的 release-assets CDN 在传输中途截断了流（直连只拿到 14,187,051 字节）
+
+修法（**不改插件任何源文件**）：
+
+```powershell
+curl.exe -L --retry 30 --retry-delay 3 --retry-all-errors -C - `
+  -o drama3_r2t2_runtime.zip `
+  "https://github.com/T8mars/Comfyui-Drama-3/releases/download/v0.3.0/Drama3-R2T2-native-win64-cu128.zip"
+# 校验：字节数必须 = 610460680，sha256 必须 = c075593eefe24c96977246e0815c52163d7b9d5df297766df242b5a2bcf3bccd
+Expand-Archive .\drama3_r2t2_runtime.zip -DestinationPath <插件目录>\r2t2-runtime -Force
+cd <插件目录>; python install.py      # → R2T2 native runtime verified.
+```
+
+**CUDA 12.8 运行时与 cu130 torch 不冲突**（实测，不是推断）：`native.py::_load_library()`
+在 torch 2.12.1+cu130 已驻留并跑过 CUDA 算子的前提下 `_load_library() OK in 0.06 s`，
+`r2t2_api_version() = 1`，`ggml_cuda_init: found 1 CUDA devices (Total VRAM: 24563 MiB) —
+Device 0: NVIDIA GeForce RTX 4090, compute capability 8.9`。原因是 soname 不同
+（`cublas64_12`/`cudart64_12` vs `cublas64_13`/`cudart64_13`），且 `native.py:70-76`
+把 runtime 的 `lib` 与 `backends` 排在 torch `lib` 之前注册 DLL 搜索目录。
+
+---
+
+## 6. 节点注册
+
+30/30 全部注册（`T8/Drama3` + `T8/Drama3/Creative`）。插件是 ComfyUI V3 schema，
+没有 `NODE_CLASS_MAPPINGS`，只能走 `get_node_list()`：
+
+```
+T8DramaLoader            T8DramaReference      T8DramaSession       T8DramaGenerate
+T8DramaScene             T8DramaInfill         T8DramaDecode        T8DramaSaveSession
+T8DramaLoadSession       T8DramaBranch         T8DramaTranscribe    T8DramaCodecEncode
+T8DramaCodecDecode       T8DramaSRT            T8DramaAlign         T8DramaLive
+T8DramaR2T2Transcribe    T8DramaEditor         T8DramaVoiceLibraryList
+T8DramaVoiceLibraryLoad  T8DramaVoiceLibrarySave  T8DramaVoiceCastLoad
+T8DramaVoiceCastBuild    T8DramaCreativeTextPreview  T8DramaCreativeProjectCreate
+T8DramaCreativeProjectLoad  T8DramaCreativeBatch    T8DramaCreativeDelivery
+T8DramaCreativeProjectExport  T8DramaCreativeProjectImport
+```
+
+---
+
+## 7. 19 个工作流
+
+`deployment/workflows/` 是按本机路径适配过的副本（原插件目录里的 19 个 JSON **一字节未动**）。
+共施加 111 处修正，分 5 类：
+
+| 类别 | 处数 | 说明 |
+|---|---|---|
+| C1 缺 widget 值 | 8 | `T8DramaGenerate` 少 v0.3.2 新增的 `replace_delivery_tags` |
+| C2 非法下拉值 | 34 | `Loader.model`/`.codec`、`Transcribe.asr_model`、`Align.aligner` 改成本机规范文件名 |
+| C3 相对→绝对路径 | 38 | `model_path` / `codec_path` / 对齐器路径 + R2T2 三个路径 |
+| C4 空文件输入 | 6 | `LoadAudio.audio` → `ref_host.wav`（占位，换成你自己的音色） |
+| C5 说明注释 | 25 | 每个 Note 追加本机安装说明 |
+
+未改动：所有 seed / 采样参数 / 脚本文本 / 连线 / 位置 / 标题 / 节点 ID。
+
+---
+
+## 8. 冒烟测试
+
+`deployment/drama3_smoke_test_api.json`（API 格式）：
+
+```
+T8DramaLoader → T8DramaGenerate(mode=speech) → T8DramaDecode → SaveAudio
+```
+
+```powershell
+cd <此目录>
+python .\deployment\_drama3_enqueue_smoke.py
+```
+
+等价裸调用：`POST http://127.0.0.1:8188/prompt`，body `{"prompt": <文件内容>, "client_id":"drama3-smoke"}`，
+再轮询 `/history/<prompt_id>`。输出 WAV 落在 `D:\ComfyUI\output\Drama3_T8\`。
+
+---
+
+## 9. 下载通道说明（为什么权重下载这么难）
+
+这台机器到 HF 的 CAS CDN（`cas-bridge.xethub.hf.co`）**每条连接被限速在 ~50 KB/s**：
+单连接 Range 请求实测 35.6 KB/s（直连）/ 56.0 KB/s（经代理）。因此：
+
+| 并发 | 聚合速率 | 38.6 GB 预计 |
+|---|---|---|
+| 1 | 0.05 MB/s | ~9 天 |
+| 16 | 0.91 MB/s | ~12 小时 |
+| 128 | 4.70 MB/s | ~2.3 小时 |
+| 256 | ~9 MB/s | ~68 分钟 |
+
+`deployment/_dl_fast.py` 是为此写的：单次解析 CDN 签名 URL（900 秒刷新），
+N 线程各持独立 session 拉固定分块 Range，写入预分配文件，用 `.parts` 位图做断点续传，
+单块失败只损失一块。
+
+```powershell
+python .\deployment\_dl_fast.py .\deployment\drama3_batch.json --workers 256 --chunk-mb 8 --proxy proxy
+```
+
+---
+
+## 10. 目录结构
+
+```
+deployment/
+    Deploy-Drama3.ps1            一键部署
+    README.md                    本文件
+    drama3_batch.json            11 个权重的下载清单（目标路径 + 精确字节数）
+    _dl_fast.py                  高并发分块下载器
+    drama3_model_manifest.json   模型清单（含 sha256）
+    drama3_deps_report.md        依赖 / transformers 决策 / R2T2 运行时完整证据
+    drama3_workflow_report.md    19 个工作流的校验与修正日志
+    drama3_smoke_test_api.json   端到端冒烟测试（API 格式）
+    drama3_workflows/            适配后的 19 个工作流
+```
